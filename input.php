@@ -28,21 +28,23 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 	 if (empty($error)) {
       $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
       $name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
-      $pasword = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
+      $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
       $picture = htmlspecialchars($_POST['picture'], ENT_QUOTES, 'UTF-8');
       $dbh = db_conn();
       try{
 /* (1) 実行するSQL文を用意する            */
+		$sql = 'select * form members where $email = email';
           /* $sql = 'xxxxxxxxxxxxx';  */
           $stmt = $dbh->prepare($sql);
           $stmt->bindValue(':email', $email, PDO::PARAM_STR);
           $stmt->execute();
 		  $record = $stmt->fetch();
 /* (2) 条件判定を記述            */
+		if ( $email = true ) {
           /* if ( xxxxxxxx ) { */
 			  $error['email'] = 'duplicate';   // eメール重複エラー
 		  }
-      }catch (PDOException $e){
+      } catch (PDOException $e){
           echo($e->getMessage());
           die();
       }
@@ -54,6 +56,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 		  $_SESSION['join'] = $_POST;
 		  $_SESSION['join']['image'] = $image;
 /* (3) 画面遷移の命令を記述        */
+		header('Location: entry.php');
         /* xxxxxxxxxxxxxxxxx */
 		  exit();
    }
